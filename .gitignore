@@ -1,0 +1,17 @@
+# Environment / secrets
+.env
+
+# Cloudflare API credentials
+cert/cloudflare.ini
+
+# Let's Encrypt generated data (certs, accounts, keys)
+cert/letsencrypt/*
+!cert/letsencrypt/.gitkeep
+
+# Certbot logs
+cert/logs/*
+!cert/logs/.gitkeep
+
+# x-ui runtime database
+db/*
+!db/.gitkeep

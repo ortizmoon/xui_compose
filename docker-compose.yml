@@ -15,6 +15,22 @@ services:
     depends_on:
       - certbot
 
+  haproxy:
+    image: haproxy:lts-alpine
+    container_name: haproxy
+    volumes:
+      - ./haproxy/haproxy.cfg:/etc/haproxy/haproxy.cfg:ro
+      - ./haproxy/entrypoint.sh:/entrypoint.sh:ro
+      - ./cert/letsencrypt:/etc/letsencrypt:ro
+    env_file:
+      - .env
+    user: root
+    entrypoint: /entrypoint.sh
+    network_mode: host
+    restart: unless-stopped
+    depends_on:
+      - certbot
+
   certbot:
     image: certbot/dns-cloudflare:latest
     container_name: certbot_cf

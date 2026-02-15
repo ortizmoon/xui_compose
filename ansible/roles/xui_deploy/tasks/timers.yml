@@ -1,0 +1,42 @@
+---
+- name: Deploy backup script
+  ansible.builtin.template:
+    src: backup-db.sh.j2
+    dest: /usr/local/bin/backup-db.sh
+    mode: "0755"
+  no_log: true
+
+- name: Deploy backup-db.service
+  ansible.builtin.copy:
+    dest: /etc/systemd/system/backup-db.service
+    content: |
+      [Unit]
+      Description=Backup x-ui database to R2
+      Requires=docker.service
+
+      [Service]
+      Type=oneshot
+      ExecStart=/usr/local/bin/backup-db.sh
+  notify: reload systemd
+
+- name: Deploy backup-db.timer
+  ansible.builtin.copy:
+    dest: /etc/systemd/system/backup-db.timer
+    content: |
+      [Unit]
+      Description=Daily database backup
+
+      [Timer]
+      OnCalendar=*-*-* 04:00:00
+      Persistent=true
+
+      [Install]
+      WantedBy=timers.target
+  notify: reload systemd
+
+- name: Enable backup-db timer
+  ansible.builtin.systemd:
+    name: backup-db.timer
+    state: started
+    enabled: true
+    daemon_reload: true

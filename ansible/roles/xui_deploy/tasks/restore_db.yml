@@ -1,0 +1,52 @@
+---
+- name: Stop xui container
+  community.docker.docker_container:
+    name: xui
+    state: stopped
+  failed_when: false
+
+- name: Get latest backup filename from R2
+  community.docker.docker_container:
+    name: s3_list
+    image: "{{ awscli_image }}"
+    command: >-
+      s3 ls s3://{{ r2_bucket }}/
+      --endpoint-url {{ r2_endpoint }}
+    env:
+      AWS_ACCESS_KEY_ID: "{{ r2_access_key }}"
+      AWS_SECRET_ACCESS_KEY: "{{ r2_secret_key }}"
+    detach: false
+    cleanup: true
+  register: _s3_list
+  no_log: true
+
+- name: Parse latest backup name
+  ansible.builtin.set_fact:
+    _latest_backup: >-
+      {{ _s3_list.container.Output.split('\n')
+         | select('search', 'x-ui-')
+         | sort | last
+         | regex_search('\S+\.db') }}
+
+- name: Download latest backup from R2
+  community.docker.docker_container:
+    name: s3_download
+    image: "{{ awscli_image }}"
+    command: >-
+      s3 cp s3://{{ r2_bucket }}/{{ _latest_backup }}
+      /data/x-ui.db
+      --endpoint-url {{ r2_endpoint }}
+    volumes:
+      - "{{ xui_dir }}/db:/data"
+    env:
+      AWS_ACCESS_KEY_ID: "{{ r2_access_key }}"
+      AWS_SECRET_ACCESS_KEY: "{{ r2_secret_key }}"
+    detach: false
+    cleanup: true
+  no_log: true
+
+- name: Start xui container
+  community.docker.docker_container:
+    name: xui
+    state: started
+  notify: restart haproxy

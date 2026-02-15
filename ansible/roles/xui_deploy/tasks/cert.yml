@@ -1,0 +1,50 @@
+---
+- name: Install certbot
+  ansible.builtin.apt:
+    name:
+      - certbot
+      - python3-certbot-dns-cloudflare
+    state: present
+    update_cache: true
+
+- name: Write Cloudflare credentials
+  ansible.builtin.copy:
+    dest: /etc/letsencrypt/cloudflare.ini
+    content: "dns_cloudflare_api_token = {{ cf_api_token }}\n"
+    mode: "0600"
+  no_log: true
+
+- name: Check if cert exists
+  ansible.builtin.stat:
+    path: "/etc/letsencrypt/live/{{ main_domain }}/fullchain.pem"
+  register: _cert
+
+- name: Issue wildcard certificate
+  ansible.builtin.command:
+    cmd: >-
+      certbot certonly --non-interactive --agree-tos
+      --email {{ cf_email }}
+      --dns-cloudflare
+      --dns-cloudflare-credentials /etc/letsencrypt/cloudflare.ini
+      --dns-cloudflare-propagation-seconds 60
+      -d {{ main_domain }} -d '*.{{ main_domain }}'
+  when: not _cert.stat.exists
+
+- name: Deploy renewal hook
+  ansible.builtin.copy:
+    dest: /etc/letsencrypt/renewal-hooks/deploy/bundle-and-reload.sh
+    mode: "0755"
+    content: |
+      #!/bin/sh
+      cd /etc/letsencrypt/live/{{ main_domain }}
+      cat fullchain.pem privkey.pem > bundle.pem
+      chmod 600 bundle.pem
+      docker kill -s HUP haproxy
+
+- name: Build bundle.pem
+  ansible.builtin.shell:
+    cmd: >-
+      cat fullchain.pem privkey.pem > bundle.pem &&
+      chmod 600 bundle.pem
+    chdir: "/etc/letsencrypt/live/{{ main_domain }}"
+    creates: "/etc/letsencrypt/live/{{ main_domain }}/bundle.pem"

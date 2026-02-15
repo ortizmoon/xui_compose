@@ -15,3 +15,12 @@ cert/logs/*
 # x-ui runtime database
 db/*
 !db/.gitkeep
+
+# Ansible - credentials (vault-encrypted)
+ansible/inventories/group_vars/*/creds.yml
+
+# Ansible - environment-specific config (domains, IPs, emails)
+ansible/inventories/group_vars/*/main.yml
+
+# Ansible - migration backups
+ansible/backup/

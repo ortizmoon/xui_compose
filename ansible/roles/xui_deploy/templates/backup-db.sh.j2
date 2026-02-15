@@ -1,0 +1,11 @@
+#!/bin/sh
+set -e
+
+docker run --rm \
+  -v {{ xui_dir }}/db:/data:ro \
+  -e AWS_ACCESS_KEY_ID={{ r2_access_key }} \
+  -e AWS_SECRET_ACCESS_KEY={{ r2_secret_key }} \
+  {{ awscli_image }} \
+  s3 cp /data/x-ui.db \
+  "s3://{{ r2_bucket }}/x-ui-$(date +%F).db" \
+  --endpoint-url {{ r2_endpoint }}

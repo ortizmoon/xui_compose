@@ -1,0 +1,28 @@
+---
+- name: Pack database to R2
+  ansible.builtin.include_tasks: pack_db.yml
+  when: xui_deploy_pack_db | default(false) | bool
+
+- name: Install Docker
+  ansible.builtin.include_tasks: docker.yml
+  when: xui_deploy_docker | default(false) | bool
+
+- name: Manage DNS records
+  ansible.builtin.include_tasks: dns.yml
+  when: xui_deploy_dns | default(false) | bool
+
+- name: Issue wildcard certificate
+  ansible.builtin.include_tasks: cert.yml
+  when: xui_deploy_cert | default(false) | bool
+
+- name: Deploy containers
+  ansible.builtin.include_tasks: containers.yml
+  when: xui_deploy_containers | default(false) | bool
+
+- name: Setup cert renewal and db backup timers
+  ansible.builtin.include_tasks: timers.yml
+  when: xui_deploy_timers | default(false) | bool
+
+- name: Restore database from R2
+  ansible.builtin.include_tasks: restore_db.yml
+  when: xui_deploy_restore_db | default(false) | bool

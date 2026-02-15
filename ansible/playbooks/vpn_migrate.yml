@@ -1,0 +1,45 @@
+---
+- name: Pack database on old VPS
+  hosts: vps_old
+  become: true
+  gather_facts: false
+  roles:
+    - role: xui_deploy
+      vars:
+        xui_deploy_pack_db: true
+        xui_deploy_docker: false
+        xui_deploy_dns: false
+        xui_deploy_cert: false
+        xui_deploy_containers: false
+        xui_deploy_timers: false
+        xui_deploy_restore_db: false
+
+- name: Deploy to new VPS
+  hosts: vps_new
+  become: true
+  gather_facts: true
+  roles:
+    - role: xui_deploy
+      vars:
+        xui_deploy_pack_db: false
+        xui_deploy_docker: false
+        xui_deploy_dns: false
+        xui_deploy_cert: false
+        xui_deploy_containers: false
+        xui_deploy_timers: false
+        xui_deploy_restore_db: false
+
+- name: Restore database from R2
+  hosts: vps_new
+  become: true
+  gather_facts: false
+  roles:
+    - role: xui_deploy
+      vars:
+        xui_deploy_pack_db: false
+        xui_deploy_docker: false
+        xui_deploy_dns: false
+        xui_deploy_cert: false
+        xui_deploy_containers: false
+        xui_deploy_timers: false
+        xui_deploy_restore_db: true

@@ -1,0 +1,9 @@
+---
+- name: restart haproxy
+  community.docker.docker_container:
+    name: haproxy
+    restart: true
+
+- name: reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: true

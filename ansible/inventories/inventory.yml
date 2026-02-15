@@ -1,0 +1,10 @@
+all:
+  children:
+    xui:
+      hosts:
+        vps_old:
+          ansible_host: 34.1.173.110
+          ansible_user: doctormetis
+        vps_new:
+          ansible_host: 35.209.250.227
+          ansible_user: doctormetis

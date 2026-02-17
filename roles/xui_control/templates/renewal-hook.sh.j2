@@ -1,0 +1,5 @@
+#!/bin/sh
+cd /etc/letsencrypt/live/{{ main_domain }}
+cat fullchain.pem privkey.pem > bundle.pem
+chmod 600 bundle.pem
+systemctl reload haproxy

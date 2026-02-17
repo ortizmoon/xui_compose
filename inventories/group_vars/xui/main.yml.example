@@ -1,0 +1,8 @@
+main_domain: "your_cloudflare_domain.com"
+cf_email: "your_cloudflare_acc_@email.com"
+xui_panel_domain: "your_3xui_panel_domain.com"
+ssh_domain: "your_ssh_termination_domain.com"
+
+## S3
+r2_bucket: backet_name
+r2_endpoint: "https://xxxxxxxxxxxxxxxxxxxxxx.r2.cloudflarestorage.com"

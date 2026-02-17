@@ -1,26 +1,13 @@
-# Environment / secrets
-.env
+*.retry
+ansible.log
+.ansible/
 
-# Cloudflare API credentials
-cert/cloudflare.ini
+inventories/group_vars/*/creds.yml
+inventories/group_vars/*/main.yml
 
-# Let's Encrypt generated data (certs, accounts, keys)
-cert/letsencrypt/*
-!cert/letsencrypt/.gitkeep
-
-# Certbot logs
-cert/logs/*
-!cert/logs/.gitkeep
-
-# x-ui runtime database
-db/*
-!db/.gitkeep
-
-# Ansible - credentials (vault-encrypted)
-ansible/inventories/group_vars/*/creds.yml
-
-# Ansible - environment-specific config (domains, IPs, emails)
-ansible/inventories/group_vars/*/main.yml
-
-# Ansible - migration backups
-ansible/backup/
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store

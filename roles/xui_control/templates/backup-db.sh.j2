@@ -5,7 +5,7 @@ import sys
 import logging
 from datetime import datetime
 
-# Setup logging for systemd journal
+## Setup logging for systemd journal
 logging.basicConfig(
     level=logging.INFO,
     format='%(levelname)s: %(message)s'
@@ -15,7 +15,7 @@ logger = logging.getLogger('backup-db')
 def main():
     logger.info("Starting database backup")
 
-    # Stop x-ui service
+    ## Stop x-ui service
     logger.info("Stopping x-ui service")
     result = subprocess.run(
         ['systemctl', 'stop', '{{ xui_control_xui_service }}'],
@@ -28,7 +28,7 @@ def main():
         logger.info("x-ui service stopped successfully")
 
     try:
-        # Upload to R2
+        ## Upload to R2
         logger.info("Connecting to R2 storage")
         s3 = boto3.client(
             's3',
@@ -48,7 +48,7 @@ def main():
         sys.exit(1)
 
     finally:
-        # Always start x-ui service back
+        ## Always start x-ui service back
         logger.info("Starting x-ui service")
         result = subprocess.run(
             ['systemctl', 'start', '{{ xui_control_xui_service }}'],

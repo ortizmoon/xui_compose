@@ -1,5 +1,3 @@
-# Autodeploy VLESS via Ansible
-
 <p align="center">
   <img src="https://img.shields.io/badge/Ansible-automation-EE0000?style=for-the-badge&logo=ansible">
   <img src="https://img.shields.io/badge/3X--UI-VLESS-1E90FF?style=for-the-badge">

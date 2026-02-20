@@ -79,8 +79,8 @@ cp inventories/group_vars/xui/creds.yml.example inventories/group_vars/xui/creds
 | Переменная | Описание | Пример |
 |---|---|---|
 | `main_domain` | Корневой домен на Cloudflare | `example.com` |
-| `xui_panel_domain` | Поддомен для панели 3X-UI | `panel.example.com` |
-| `ssh_domain` | Поддомен для SSH-over-TLS | `connect.example.com` |
+| `xui_panel_domain` | Поддомен для панели 3x-ui | `panel.example.com` |
+| `ssh_domain` | Поддомен для ssh | `connect.example.com` |
 | `vless_fake_domain` | Маскирующий SNI для VLESS | `vk.com` |
 
 
@@ -98,7 +98,7 @@ ansible-playbook playbooks/vpn_deploy.yml
 
 ```yaml
 xui_control_deploy_cert: true         # Создать DNS-записи + выпустить wildcard TLS-сертификат
-xui_control_install_3xui: true        # Установить HAProxy + 3X-UI
+xui_control_install_3xui: true        # Установить haproxy + 3X-UI
 xui_control_restore_db: false         # Восстановить БД из R2 (используется при миграции)
 xui_control_add_backup_service: true  # Задеплоить службу в виде скрипта для бэкапа, с кроном
 ```

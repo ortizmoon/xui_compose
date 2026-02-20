@@ -3,5 +3,5 @@ all:
     xui:
       hosts:
         xui_server:
-          ansible_host: 35.192.119.71
-          ansible_user: doctormetis
+          ansible_host: 192.91.186.59
+          ansible_user: root

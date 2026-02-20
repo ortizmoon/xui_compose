@@ -7,16 +7,15 @@ Wants=network-online.target
 Type=oneshot
 ExecStart={{ xui_control_backup_db_script_path }}
 
-# Logging
+## Logs
 StandardOutput=journal
 StandardError=journal
 SyslogIdentifier=backup-db
 
-# Timeouts
+## Timeouts
 TimeoutStartSec=300
 TimeoutStopSec=30
 
-# Security
 User=root
 PrivateTmp=yes
 NoNewPrivileges=yes
